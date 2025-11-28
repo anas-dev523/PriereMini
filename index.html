@@ -86,13 +86,14 @@
     }
     .compass-needle {
       position: absolute;
-      width: 2px;
+      width: 3px;
       height: 42%;
       background: #f97373;
       top: 8%;
       left: 50%;
       transform-origin: bottom center;
-      transform: translateX(-50%) rotate(122deg); /* ~122° vers la Qibla */
+      transform: translateX(-50%) rotate(122deg); /* par défaut vers la Qibla */
+      border-radius: 999px;
     }
     .compass-n {
       position: absolute;
@@ -105,6 +106,11 @@
     .qibla-text {
       font-size: 0.9rem;
       opacity: 0.9;
+    }
+    #qibla-status {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 0.3rem;
     }
 
     .duas {
@@ -154,13 +160,20 @@
       <h2>Direction de la Qibla</h2>
       <div class="compass" aria-hidden="true">
         <div class="compass-circle">
-          <div class="compass-needle"></div>
+          <div class="compass-needle" id="compass-needle"></div>
           <div class="compass-n">N</div>
         </div>
       </div>
       <p class="qibla-text">
         Depuis Lille, la Qibla est approximativement orientée vers le sud-est
         (environ 122° à partir du nord, en direction de La Mecque).
+      </p>
+      <button id="enable-qibla" type="button">
+        Activer la boussole Qibla
+      </button>
+      <p id="qibla-status">
+        Appuie sur “Activer la boussole Qibla” et tourne ton téléphone : l’aiguille
+        se dirigera vers la Qibla si les capteurs de boussole sont disponibles.
       </p>
     </section>
 
@@ -253,6 +266,7 @@
   </main>
 
   <script>
+    // --- Horaires de prière (Lille) ---
     const CITY = "Lille";
     const COUNTRY = "France";
     const METHOD = 3;
@@ -339,6 +353,71 @@
 
     document.addEventListener("DOMContentLoaded", loadPrayerTimes);
     refreshBtn.addEventListener("click", loadPrayerTimes);
+
+    // --- Boussole Qibla dynamique ---
+    const QIBLA_BEARING = 122; // environ 122° depuis Lille vers La Mecque
+    const compassNeedle = document.getElementById("compass-needle");
+    const enableQiblaBtn = document.getElementById("enable-qibla");
+    const qiblaStatus = document.getElementById("qibla-status");
+
+    function updateNeedle(headingDeg) {
+      // headingDeg = direction du téléphone par rapport au nord
+      // on veut que l'aiguille pointe vers la Qibla -> rotation relative
+      const relative = QIBLA_BEARING - headingDeg;
+      compassNeedle.style.transform =
+        "translateX(-50%) rotate(" + relative + "deg)";
+    }
+
+    function handleOrientation(event) {
+      let heading = null;
+
+      // iOS Safari
+      if (typeof event.webkitCompassHeading === "number") {
+        heading = event.webkitCompassHeading; // déjà en degrés à partir du nord
+      } else if (event.alpha != null) {
+        // Android / autres navigateurs
+        // Approximatif : alpha 0 = nord, on inverse pour aller dans le sens horaire
+        heading = 360 - event.alpha;
+      }
+
+      if (heading != null && !isNaN(heading)) {
+        updateNeedle(heading);
+      }
+    }
+
+    async function enableQiblaCompass() {
+      if (typeof DeviceOrientationEvent === "undefined") {
+        qiblaStatus.textContent =
+          "Boussole non disponible sur cet appareil ou ce navigateur.";
+        return;
+      }
+
+      // iOS 13+ : demande explicite
+      if (typeof DeviceOrientationEvent.requestPermission === "function") {
+        try {
+          const permission = await DeviceOrientationEvent.requestPermission();
+          if (permission !== "granted") {
+            qiblaStatus.textContent =
+              "Permission refusée. Active l’accès aux capteurs de mouvement dans les réglages.";
+            return;
+          }
+          window.addEventListener("deviceorientation", handleOrientation, true);
+          qiblaStatus.textContent =
+            "Boussole Qibla activée. Tourne doucement le téléphone pour aligner l’aiguille vers la Qibla.";
+        } catch (err) {
+          console.error(err);
+          qiblaStatus.textContent =
+            "Impossible d’accéder aux capteurs de boussole.";
+        }
+      } else {
+        // Android / anciens navigateurs
+        window.addEventListener("deviceorientation", handleOrientation, true);
+        qiblaStatus.textContent =
+          "Boussole Qibla activée. Tourne doucement le téléphone pour aligner l’aiguille vers la Qibla.";
+      }
+    }
+
+    enableQiblaBtn.addEventListener("click", enableQiblaCompass);
   </script>
 </body>
 </html>
