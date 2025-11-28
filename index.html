@@ -89,15 +89,25 @@
     <p style="opacity:0.7; font-size:0.85rem;">Réalisé par ton amoureux Anas ❤️</p>
 
     <p class="location">Lille, France (méthode Muslim World League)</p>
+
     <p id="date"></p>
-    <p id="status">Chargement des horaires...</p>
 
-    <ul id="prayer-list" aria-live="polite"></ul>
+    <!-- Accessible : annoncé automatiquement -->
+    <p id="status" role="status" aria-live="polite">Chargement des horaires...</p>
 
-    <button id="refresh">Actualiser les horaires</button>
+    <!-- Liste accessible -->
+    <ul
+      id="prayer-list"
+      aria-live="polite"
+      aria-label="Liste des horaires de prière du jour">
+    </ul>
+
+    <button id="refresh" aria-label="Actualiser les horaires de la prière">
+      Actualiser les horaires de prière
+    </button>
 
     <!-- SECTION DOUAS -->
-    <section class="duas">
+    <section class="duas" aria-label="Douas importantes">
       <h2>Douas importantes</h2>
 
       <div class="dua">
@@ -124,62 +134,63 @@
         <p class="dua-title">🔸 Demande de guidance</p>
         <p>“Rabbi zidni ‘ilma. Ô Allah, augmente-moi en science.”</p>
       </div>
+
+      <!-- NOUVEAUX 5 DOUAS -->
+
       <div class="dua">
-    <p class="dua-title">🔸 Doua contre l’angoisse et la tristesse</p>
-    <p>“Allahoumma inni a‘outhou bika mina al-hammi wal-hazani wal-‘ajzi wal-kasali wal-joubni wal-boukhli wa ghalabatid-dayni wa qahri ar-rijal.”</p>
-  </div>
+        <p class="dua-title">🔸 Contre l’angoisse et la tristesse</p>
+        <p>“Allahoumma inni a‘outhou bika mina al-hammi wal-hazani wal-‘ajzi wal-kasali wal-joubni wal-boukhli wa ghalabatid-dayni wa qahri ar-rijal.”</p>
+      </div>
 
-  <div class="dua">
-    <p class="dua-title">🔸 Doua de protection générale</p>
-    <p>“Bismillah alladhi la yadourrou ma‘a ismihi shay’un fil-ardi wa la fissama’ wa Houwa as-Sami‘ou al-‘Alim.”</p>
-  </div>
+      <div class="dua">
+        <p class="dua-title">🔸 Protection générale</p>
+        <p>“Bismillah alladhi la yadourrou ma‘a ismihi shay’un fil-ardi wa la fissama’ wa Houwa as-Sami‘ou al-‘Alim.”</p>
+      </div>
 
-  <div class="dua">
-    <p class="dua-title">🔸 Doua pour faciliter une chose</p>
-    <p>“Allahoumma la sahla illa ma ja‘altahou sahlâ, wa anta taj‘alou al-hazna idha shi’ta sahlâ.”</p>
-  </div>
+      <div class="dua">
+        <p class="dua-title">🔸 Pour faciliter une chose</p>
+        <p>“Allahoumma la sahla illa ma ja‘altahou sahlâ, wa anta taj‘alou al-hazna idha shi’ta sahlâ.”</p>
+      </div>
 
-  <div class="dua">
-    <p class="dua-title">🔸 Doua pour demander le bien</p>
-    <p>“Allahoumma inni as’alouka min khayri ma sa’alaka ‘abdouka wa nabiyyoka Mouhammad.”</p>
-  </div>
+      <div class="dua">
+        <p class="dua-title">🔸 Pour demander le bien</p>
+        <p>“Allahoumma inni as’alouka min khayri ma sa’alaka ‘abdouka wa nabiyyoka Mouhammad.”</p>
+      </div>
 
-  <div class="dua">
-    <p class="dua-title">🔸 Doua de protection du matin et du soir</p>
-    <p>“A‘oudhou bi kalimati-llahi at-tammati min sharri ma khalaq.”</p>
-  </div>
+      <div class="dua">
+        <p class="dua-title">🔸 Protection du matin et du soir</p>
+        <p>“A‘oudhou bi kalimati-llahi at-tammati min sharri ma khalaq.”</p>
+      </div>
 
-  <!-- PAROLES À DIRE DANS LA PRIÈRE -->
+      <!-- PAROLES IMPORTANTES DANS LA PRIÈRE -->
 
-  <h2 style="margin-top:1.4rem;">Ce qu’il faut dire dans la prière</h2>
+      <h2 style="margin-top:1.4rem;">Ce qu’il faut dire pendant la prière</h2>
 
-  <div class="dua">
-    <p class="dua-title">🔸 Takbir (début de la prière)</p>
-    <p>“Allahou Akbar”</p>
-  </div>
+      <div class="dua">
+        <p class="dua-title">🔸 Au début de la prière (Takbir)</p>
+        <p>“Allahou Akbar”</p>
+      </div>
 
-  <div class="dua">
-    <p class="dua-title">🔸 Doua d’ouverture</p>
-    <p>“Subhanaka Allahoumma wa bihamdika tabarakasmuka wa ta‘ala jadduka wa la ilaha ghayruk.”</p>
-  </div>
+      <div class="dua">
+        <p class="dua-title">🔸 Doua d’ouverture</p>
+        <p>“Subhanaka Allahoumma wa bihamdika tabarakasmuka wa ta‘ala jadduka wa la ilaha ghayruk.”</p>
+      </div>
 
-  <div class="dua">
-    <p class="dua-title">🔸 Ce qu’on dit en ruku‘ (inclinaison)</p>
-    <p>“Subhana Rabbiyal-‘Azim” (3 fois)</p>
-  </div>
+      <div class="dua">
+        <p class="dua-title">🔸 En ruku‘ (inclinaison)</p>
+        <p>“Subhana Rabbiyal-‘Azim” (3 fois)</p>
+      </div>
 
-  <div class="dua">
-    <p class="dua-title">🔸 Ce qu’on dit en soujoud (prosternation)</p>
-    <p>“Subhana Rabbiyal-A‘la” (3 fois)</p>
-  </div>
+      <div class="dua">
+        <p class="dua-title">🔸 En soujoud (prosternation)</p>
+        <p>“Subhana Rabbiyal-A‘la” (3 fois)</p>
+      </div>
 
-  <div class="dua">
-    <p class="dua-title">🔸 Tachahhud</p>
-    <p>“At-tahiyyatou lillahi was-salawâtou wat-tayyibât… (le texte complet du tachahhud)”</p>
-  </div>
-</section>
-
-
+      <div class="dua">
+        <p class="dua-title">🔸 Tachahhud</p>
+        <p>“At-tahiyyatou lillahi was-salawâtou wat-tayyibât...”</p>
+        <p>(le Texte du tachahhud complet)</p>
+      </div>
     </section>
   </main>
 
