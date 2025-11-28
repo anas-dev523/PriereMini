@@ -15,33 +15,33 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
     main {
       background: #0b1020;
       padding: 1.5rem;
       border-radius: 1rem;
-      width: min(420px, 95vw);
+      width: min(480px, 100%);
       box-shadow: 0 20px 40px rgba(0,0,0,0.6);
     }
-    h1 {
-      font-size: 1.4rem;
-      margin-bottom: 0.25rem;
-    }
-    p {
-      margin: 0.3rem 0;
+    h1, h2 {
+      margin: 0;
+      margin-bottom: 0.4rem;
     }
     .location {
       font-size: 0.9rem;
       opacity: 0.8;
+      margin-bottom: 0.4rem;
     }
     #status {
       margin-top: 0.6rem;
       font-size: 0.9rem;
+      margin-bottom: 0.6rem;
     }
     ul {
       list-style: none;
       padding: 0;
-      margin: 0.8rem 0 0;
+      margin: 0.8rem 0;
       border-top: 1px solid rgba(255,255,255,0.15);
     }
     li {
@@ -64,23 +64,75 @@
       color: #f5f5f5;
       font-size: 0.95rem;
     }
+    .duas {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .dua {
+      background: rgba(255,255,255,0.05);
+      padding: 0.8rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.8rem;
+    }
+    .dua-title {
+      margin: 0;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
   </style>
 </head>
+
 <body>
   <main>
     <h1>Horaires de prière</h1>
+    <p style="opacity:0.7; font-size:0.85rem;">Réalisé par ton amoureux Anas ❤️</p>
+
     <p class="location">Lille, France (méthode Muslim World League)</p>
     <p id="date"></p>
     <p id="status">Chargement des horaires...</p>
+
     <ul id="prayer-list" aria-live="polite"></ul>
+
     <button id="refresh">Actualiser les horaires</button>
+
+    <!-- SECTION DOUAS -->
+    <section class="duas">
+      <h2>Douas importantes</h2>
+
+      <div class="dua">
+        <p class="dua-title">🔸 Doua du matin</p>
+        <p>“Allahoumma bika asbahna wa bika amsayna wa bika nahya wa bika namout wa ilayka an-nouchour.”</p>
+      </div>
+
+      <div class="dua">
+        <p class="dua-title">🔸 Doua du soir</p>
+        <p>“Allahoumma bika amsayna wa bika asbahna wa bika nahya wa bika namout wa ilayka al-massir.”</p>
+      </div>
+
+      <div class="dua">
+        <p class="dua-title">🔸 Demande de pardon</p>
+        <p>“Astaghfiroullah al-‘azim alladhi la ilaha illa Houwa al-Hayy al-Qayyoum wa atoubou ilayh.”</p>
+      </div>
+
+      <div class="dua">
+        <p class="dua-title">🔸 Protection et tranquillité</p>
+        <p>“Hasbiyallahou la ilaha illa Houwa ‘alayhi tawakkaltou wa Houwa Rabboul-‘Arshil-‘Azim.”</p>
+      </div>
+
+      <div class="dua">
+        <p class="dua-title">🔸 Demande de guidance</p>
+        <p>“Rabbi zidni ‘ilma. Ô Allah, augmente-moi en science.”</p>
+      </div>
+
+    </section>
   </main>
 
   <script>
     const CITY = "Lille";
     const COUNTRY = "France";
-    const METHOD = 3;  // Muslim World League
-    const SCHOOL = 0;  // Standard
+    const METHOD = 3;
+    const SCHOOL = 0;
 
     const dateEl = document.getElementById("date");
     const statusEl = document.getElementById("status");
@@ -123,21 +175,15 @@
         + "&month=" + month
         + "&year=" + year;
 
-      console.log("Appel API :", url);
-
       try {
         const res = await fetch(url);
-        if (!res.ok) {
-          throw new Error("HTTP " + res.status);
-        }
-        const json = await res.json();
-        console.log("Réponse API :", json);
+        if (!res.ok) throw new Error("HTTP " + res.status);
 
-        if (!json || json.code !== 200 || !json.data || !json.data.timings) {
-          throw new Error("Format de réponse inattendu");
-        }
+        const json = await res.json();
+        if (!json || json.code !== 200) throw new Error("API error");
 
         const t = json.data.timings;
+
         const mapping = [
           ["Fajr", "Fajr"],
           ["Sunrise", "Lever du soleil"],
@@ -147,37 +193,28 @@
           ["Isha", "Isha"],
         ];
 
-        const now = new Date();
         listEl.innerHTML = "";
         mapping.forEach(([key, label]) => {
           const raw = t[key];
           if (!raw) return;
+
           const [h, m] = raw.split(":").map(Number);
-          const d = new Date(year, month - 1, day, h, m, 0, 0);
+          const d = new Date(year, month - 1, day, h, m);
 
           const li = document.createElement("li");
-          const spanName = document.createElement("span");
-          const spanTime = document.createElement("span");
-          spanName.className = "name";
-          spanName.textContent = label;
-          spanTime.textContent = formatTimeFr(d);
-          li.appendChild(spanName);
-          li.appendChild(spanTime);
+          li.innerHTML = `<span class="name">${label}</span><span>${formatTimeFr(d)}</span>`;
           listEl.appendChild(li);
         });
 
         statusEl.textContent = "Horaires chargés avec succès.";
       } catch (err) {
+        statusEl.textContent = "Erreur : impossible de charger les horaires.";
         console.error(err);
-        statusEl.textContent =
-          "Impossible de charger les horaires. Vérifie ta connexion ou réessaie plus tard.";
       }
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      loadPrayerTimes();
-      refreshBtn.addEventListener("click", loadPrayerTimes);
-    });
+    document.addEventListener("DOMContentLoaded", loadPrayerTimes);
+    refreshBtn.addEventListener("click", loadPrayerTimes);
   </script>
 </body>
 </html>
